@@ -47,6 +47,11 @@ const submissionSchema = new Schema<ISubmissionDocument>(
     annotationData: {
       type: Schema.Types.Mixed,
     },
+    reviewText: {
+      type: String,
+      trim: true,
+      maxlength: [2000, 'Review text must be less than 2000 characters'],
+    },
     reportPath: {
       type: String,
     },

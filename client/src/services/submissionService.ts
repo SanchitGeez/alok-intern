@@ -16,6 +16,7 @@ export interface Submission {
   annotatedImagePath?: string;
   annotatedImageUrl?: string;
   annotationData?: any;
+  reviewText?: string;
   reportPath?: string;
   reportUrl?: string;
   status: 'uploaded' | 'annotated' | 'reported';
@@ -30,6 +31,7 @@ export interface CreateSubmissionRequest {
 
 export interface UpdateSubmissionRequest {
   annotationData?: any;
+  reviewText?: string;
   status?: 'uploaded' | 'annotated' | 'reported';
   annotatedImagePath?: string;
   reportPath?: string;
@@ -94,6 +96,11 @@ class SubmissionService {
 
   async deleteSubmission(id: string): Promise<SubmissionResponse> {
     const response = await api.delete(`/submissions/${id}`);
+    return response.data;
+  }
+
+  async generateReport(id: string, reportData: { findings: string; recommendations: string }): Promise<SubmissionResponse> {
+    const response = await api.post(`/submissions/${id}/generate-report`, reportData);
     return response.data;
   }
 

@@ -79,6 +79,7 @@ export interface ISubmission {
   originalImagePath: string;
   annotatedImagePath?: string;
   annotationData?: object;
+  reviewText?: string;
   reportPath?: string;
   status: 'uploaded' | 'annotated' | 'reported';
   createdAt: Date;

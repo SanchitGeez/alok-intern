@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { Submission } from '../models/Submission';
 import { User } from '../models/User';
 import { getFileUrl } from '../middleware/upload';
+import { PDFService } from '../services/pdfService';
 import path from 'path';
 
 // Validation schemas
@@ -17,6 +18,7 @@ const createSubmissionSchema = z.object({
 
 const updateSubmissionSchema = z.object({
   annotationData: z.any().optional(),
+  reviewText: z.string().optional(),
   status: z.enum(['uploaded', 'annotated', 'reported']).optional()
 });
 
@@ -123,13 +125,14 @@ export const getPatientSubmissions = async (req: Request, res: Response) => {
       .sort({ createdAt: -1 });
 
     // Add file URLs to submissions
+    const pdfService = PDFService.getInstance();
     const submissionsWithUrls = submissions.map(submission => ({
       ...submission.toJSON(),
       originalImageUrl: getFileUrl(path.basename(submission.originalImagePath), 'image'),
       annotatedImageUrl: submission.annotatedImagePath ? 
         getFileUrl(path.basename(submission.annotatedImagePath), 'image') : null,
       reportUrl: submission.reportPath ? 
-        getFileUrl(path.basename(submission.reportPath), 'report') : null
+        pdfService.getReportUrl(path.basename(submission.reportPath)) : null
     }));
 
     res.json({
@@ -191,13 +194,14 @@ export const getAllSubmissions = async (req: Request, res: Response) => {
     ]);
 
     // Add file URLs to submissions
+    const pdfService = PDFService.getInstance();
     const submissionsWithUrls = submissions.map(submission => ({
       ...submission.toJSON(),
       originalImageUrl: getFileUrl(path.basename(submission.originalImagePath), 'image'),
       annotatedImageUrl: submission.annotatedImagePath ? 
         getFileUrl(path.basename(submission.annotatedImagePath), 'image') : null,
       reportUrl: submission.reportPath ? 
-        getFileUrl(path.basename(submission.reportPath), 'report') : null
+        pdfService.getReportUrl(path.basename(submission.reportPath)) : null
     }));
 
     res.json({
@@ -253,13 +257,14 @@ export const getSubmission = async (req: Request, res: Response) => {
     }
 
     // Add file URLs to submission
+    const pdfService = PDFService.getInstance();
     const submissionWithUrls = {
       ...submission.toJSON(),
       originalImageUrl: getFileUrl(path.basename(submission.originalImagePath), 'image'),
       annotatedImageUrl: submission.annotatedImagePath ? 
         getFileUrl(path.basename(submission.annotatedImagePath), 'image') : null,
       reportUrl: submission.reportPath ? 
-        getFileUrl(path.basename(submission.reportPath), 'report') : null
+        pdfService.getReportUrl(path.basename(submission.reportPath)) : null
     };
 
     res.json({
@@ -316,13 +321,14 @@ export const updateSubmission = async (req: Request, res: Response) => {
     }
 
     // Add file URLs to submission
+    const pdfService = PDFService.getInstance();
     const submissionWithUrls = {
       ...submission.toJSON(),
       originalImageUrl: getFileUrl(path.basename(submission.originalImagePath), 'image'),
       annotatedImageUrl: submission.annotatedImagePath ? 
         getFileUrl(path.basename(submission.annotatedImagePath), 'image') : null,
       reportUrl: submission.reportPath ? 
-        getFileUrl(path.basename(submission.reportPath), 'report') : null
+        pdfService.getReportUrl(path.basename(submission.reportPath)) : null
     };
 
     res.json({
@@ -390,6 +396,94 @@ export const deleteSubmission = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Internal server error'
+    });
+  }
+};
+
+// Generate PDF report for submission (admin only)
+export const generateReport = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const userId = (req as any).user?.userId;
+    
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not authenticated'
+      });
+    }
+
+    // Verify user is an admin
+    const user = await User.findById(userId);
+    if (!user || user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Admin access required'
+      });
+    }
+
+    // Find the submission
+    const submission = await Submission.findById(id);
+    
+    if (!submission) {
+      return res.status(404).json({
+        success: false,
+        message: 'Submission not found'
+      });
+    }
+
+    // Extract report data from request body
+    const { findings, recommendations } = req.body;
+    
+    if (!findings || !recommendations) {
+      return res.status(400).json({
+        success: false,
+        message: 'Findings and recommendations are required'
+      });
+    }
+
+    // Prepare report data
+    const reportData = {
+      submissionId: submission._id.toString(),
+      patientDetails: submission.patientDetails,
+      originalImagePath: submission.originalImagePath,
+      annotatedImagePath: submission.annotatedImagePath,
+      annotationData: submission.annotationData,
+      findings,
+      recommendations,
+      doctorName: user.name || 'Dr. ' + user.email.split('@')[0],
+      reportDate: new Date()
+    };
+
+    // Generate PDF report
+    const pdfService = PDFService.getInstance();
+    const reportPath = await pdfService.generateReport(reportData);
+    
+    // Update submission with report path and status
+    await Submission.findByIdAndUpdate(id, {
+      reportPath,
+      status: 'reported'
+    });
+
+    // Return success response with download URL
+    const reportFileName = path.basename(reportPath);
+    const reportUrl = pdfService.getReportUrl(reportFileName);
+
+    res.json({
+      success: true,
+      message: 'Report generated successfully',
+      data: {
+        reportPath,
+        reportUrl,
+        fileName: reportFileName
+      }
+    });
+
+  } catch (error) {
+    console.error('Error generating report:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error generating report'
     });
   }
 };

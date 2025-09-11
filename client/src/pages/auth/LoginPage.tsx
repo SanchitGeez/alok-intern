@@ -33,7 +33,13 @@ export function LoginPage() {
     const success = await login(data.email, data.password);
     
     if (success) {
-      navigate('/dashboard');
+      // Redirect based on user role
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (currentUser.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     }
   };
 

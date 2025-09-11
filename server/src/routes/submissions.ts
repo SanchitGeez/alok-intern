@@ -5,7 +5,8 @@ import {
   getAllSubmissions,
   getSubmission,
   updateSubmission,
-  deleteSubmission
+  deleteSubmission,
+  generateReport
 } from '../controllers/submissionController';
 import { authenticate, authorize } from '../middleware/auth';
 import { uploadImage, handleUploadError } from '../middleware/upload';
@@ -59,6 +60,14 @@ router.delete(
   authenticate,
   authorize('admin'),
   deleteSubmission
+);
+
+// POST /api/submissions/:id/generate-report - Generate PDF report (admin only)
+router.post(
+  '/:id/generate-report',
+  authenticate,
+  authorize('admin'),
+  generateReport
 );
 
 export default router;

@@ -45,20 +45,35 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
   };
 
   const handleViewImage = () => {
-    if (submission.originalImageUrl) {
-      window.open(submission.originalImageUrl, '_blank');
+    let imageUrl = submission.originalImageUrl;
+    if (!imageUrl && submission.originalImagePath) {
+      const fileName = submission.originalImagePath.split('/').pop() || submission.originalImagePath;
+      imageUrl = `http://localhost:5000/uploads/images/${fileName}`;
+    }
+    if (imageUrl) {
+      window.open(imageUrl, '_blank');
     }
   };
 
   const handleViewAnnotation = () => {
-    if (submission.annotatedImageUrl) {
-      window.open(submission.annotatedImageUrl, '_blank');
+    let imageUrl = submission.annotatedImageUrl;
+    if (!imageUrl && submission.annotatedImagePath) {
+      const fileName = submission.annotatedImagePath.split('/').pop() || submission.annotatedImagePath;
+      imageUrl = `http://localhost:5000/uploads/images/${fileName}`;
+    }
+    if (imageUrl) {
+      window.open(imageUrl, '_blank');
     }
   };
 
   const handleDownloadReport = () => {
-    if (submission.reportUrl) {
-      window.open(submission.reportUrl, '_blank');
+    let reportUrl = submission.reportUrl;
+    if (!reportUrl && submission.reportPath) {
+      const fileName = submission.reportPath.split('/').pop() || submission.reportPath;
+      reportUrl = `http://localhost:5000/uploads/reports/${fileName}`;
+    }
+    if (reportUrl) {
+      window.open(reportUrl, '_blank');
     }
   };
 
@@ -112,13 +127,13 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
               variant="outline" 
               size="sm" 
               onClick={handleViewImage}
-              disabled={!submission.originalImageUrl}
+              disabled={!submission.originalImageUrl && !submission.originalImagePath}
             >
               <Eye className="h-4 w-4 mr-2" />
               View Original
             </Button>
 
-            {submission.status === 'annotated' && submission.annotatedImageUrl && (
+            {submission.status === 'annotated' && (submission.annotatedImageUrl || submission.annotatedImagePath) && (
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -129,7 +144,7 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
               </Button>
             )}
 
-            {submission.status === 'reported' && submission.reportUrl && (
+            {submission.status === 'reported' && (submission.reportUrl || submission.reportPath) && (
               <Button 
                 variant="default" 
                 size="sm" 

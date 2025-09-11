@@ -20,6 +20,7 @@ interface SubmissionState {
   fetchSubmission: (id: string) => Promise<void>;
   updateSubmission: (id: string, data: any) => Promise<boolean>;
   deleteSubmission: (id: string) => Promise<boolean>;
+  generateReport: (id: string, reportData: { findings: string; recommendations: string }) => Promise<{ success: boolean; reportUrl?: string }>;
   clearError: () => void;
   setCurrentSubmission: (submission: Submission | null) => void;
 }
@@ -204,6 +205,39 @@ export const useSubmissionStore = create<SubmissionState>((set, get) => ({
 
   clearError: () => {
     set({ error: null });
+  },
+
+  generateReport: async (id: string, reportData: { findings: string; recommendations: string }) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await submissionService.generateReport(id, reportData);
+      
+      if (response.success && response.data) {
+        // Update the current submission with the new report data
+        set(state => ({
+          currentSubmission: state.currentSubmission ? {
+            ...state.currentSubmission,
+            status: 'reported',
+            reportUrl: response.data.reportUrl
+          } : null,
+          isLoading: false,
+        }));
+        return { success: true, reportUrl: response.data.reportUrl };
+      } else {
+        set({
+          error: response.message || 'Failed to generate report',
+          isLoading: false,
+        });
+        return { success: false };
+      }
+    } catch (error: any) {
+      set({
+        error: error.response?.data?.message || 'Failed to generate report',
+        isLoading: false,
+      });
+      return { success: false };
+    }
   },
 
   setCurrentSubmission: (submission: Submission | null) => {

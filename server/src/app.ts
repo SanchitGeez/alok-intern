@@ -69,6 +69,26 @@ if (config.NODE_ENV === 'development') {
   });
 }
 
+// CORS middleware for static files
+app.use('/uploads', (req: Request, res: Response, next: NextFunction) => {
+  // Add CORS headers for static files
+  res.header('Access-Control-Allow-Origin', config.CLIENT_URL);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Override restrictive security headers for static files
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.header('Cross-Origin-Embedder-Policy', 'unsafe-none');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
 // Serve static files (uploads)
 app.use('/uploads', express.static(config.UPLOAD_DIR));
 

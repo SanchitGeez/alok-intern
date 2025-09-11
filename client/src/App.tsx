@@ -7,6 +7,8 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { PatientDashboard } from '@/pages/patient/Dashboard';
+import { AdminDashboard } from '@/pages/admin/AdminDashboard';
+import { SubmissionReview } from '@/pages/admin/SubmissionReview';
 import { LandingPage } from '@/pages/LandingPage';
 
 function App() {
@@ -45,6 +47,25 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['patient']}>
                 <PatientDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Admin Routes */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/admin/submissions/:id" 
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <SubmissionReview />
               </ProtectedRoute>
             } 
           />

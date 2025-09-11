@@ -54,15 +54,14 @@ export function RegisterPage() {
       data.email, 
       data.password, 
       data.role, 
-      data.patientId
+      data.role === 'patient' ? data.patientId : undefined
     );
     
     if (success) {
       if (data.role === 'patient') {
         navigate('/dashboard');
       } else {
-        // Redirect to admin dashboard (to be implemented later)
-        navigate('/dashboard');
+        navigate('/admin/dashboard');
       }
     }
   };
