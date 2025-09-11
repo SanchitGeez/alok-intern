@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import { Submission } from '../models/Submission';
 import { User } from '../models/User';
-import { getFileUrl } from '../middleware/upload';
+import { getFileUrl, getPublicImageUrl, copyToPublicDirectory } from '../middleware/upload';
 import { PDFService } from '../services/pdfService';
 import path from 'path';
 
@@ -60,6 +60,9 @@ export const createSubmission = async (req: Request, res: Response) => {
         message: 'Only patients can create submissions'
       });
     }
+
+    // Copy image to public directory for better accessibility
+    copyToPublicDirectory(req);
 
     // Create the submission
     const submission = new Submission({

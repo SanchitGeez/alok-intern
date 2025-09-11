@@ -89,6 +89,28 @@ app.use('/uploads', (req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// CORS middleware for public images - allow all origins
+app.use('/public', (req: Request, res: Response, next: NextFunction) => {
+  // Allow all origins for public images
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  
+  // Override restrictive security headers for public files
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.header('Cross-Origin-Embedder-Policy', 'unsafe-none');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
+
+// Serve public static files (accessible to all origins)
+app.use('/public', express.static('public'));
+
 // Serve static files (uploads)
 app.use('/uploads', express.static(config.UPLOAD_DIR));
 

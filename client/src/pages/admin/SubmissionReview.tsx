@@ -26,6 +26,7 @@ import { Label } from '@/components/ui/label';
 import { useSubmissionStore } from '@/stores/submissionStore';
 import { ImageAnnotator } from '@/components/ImageAnnotator';
 import type { Submission } from '@/services/submissionService';
+import testImage from '@/assets/image.png';
 
 export function SubmissionReview() {
   const { id } = useParams<{ id: string }>();
@@ -371,33 +372,14 @@ export function SubmissionReview() {
                 </p>
               </CardHeader>
               <CardContent>
-                {(() => {
-                  // Try to get the image URL, with fallback construction
-                  let imageUrl = currentSubmission.originalImageUrl;
-                  if (!imageUrl && currentSubmission.originalImagePath) {
-                    // Construct URL from path if URL not provided
-                    const fileName = currentSubmission.originalImagePath.split('/').pop() || currentSubmission.originalImagePath;
-                    imageUrl = `http://localhost:5000/uploads/images/${fileName}`;
-                  }
-                  
-                  console.log('Final image URL:', imageUrl);
-                  
-                  return imageUrl ? (
-                    <ImageAnnotator
-                      imageUrl={imageUrl}
-                      initialAnnotations={annotationData}
-                      onAnnotationChange={handleAnnotationChange}
-                      showAnnotations={showAnnotations}
-                    />
-                  ) : (
-                    <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center">
-                      <p className="text-slate-500">Image not available</p>
-                      <p className="text-slate-400 text-sm mt-2">
-                        Path: {currentSubmission.originalImagePath || 'No path'}
-                      </p>
-                    </div>
-                  );
-                })()}
+                {/* SIMPLE IMAGE DISPLAY FOR TESTING */}
+                <div className="bg-slate-100 rounded-lg p-4 flex items-center justify-center">
+                  <img 
+                    src={testImage} 
+                    alt="Test Image" 
+                    className="max-w-full max-h-96 object-contain rounded"
+                  />
+                </div>
               </CardContent>
             </Card>
 

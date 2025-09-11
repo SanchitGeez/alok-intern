@@ -48,7 +48,8 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
     let imageUrl = submission.originalImageUrl;
     if (!imageUrl && submission.originalImagePath) {
       const fileName = submission.originalImagePath.split('/').pop() || submission.originalImagePath;
-      imageUrl = `http://localhost:5000/uploads/images/${fileName}`;
+      // Try public URL first (accessible to all origins)
+      imageUrl = `http://localhost:5000/public/images/${fileName}`;
     }
     if (imageUrl) {
       window.open(imageUrl, '_blank');

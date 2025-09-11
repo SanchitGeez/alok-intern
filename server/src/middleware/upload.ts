@@ -4,6 +4,15 @@ import fs from 'fs';
 import crypto from 'crypto';
 import { Request } from 'express';
 
+// Extend Express Request type
+declare global {
+  namespace Express {
+    interface Request {
+      uploadedFilename?: string;
+    }
+  }
+}
+
 // Ensure upload directories exist
 const ensureDirectoryExists = (dirPath: string) => {
   if (!fs.existsSync(dirPath)) {
@@ -16,9 +25,15 @@ const uploadsDir = process.env.UPLOAD_DIR || './uploads';
 const imagesDir = path.join(uploadsDir, 'images');
 const reportsDir = path.join(uploadsDir, 'reports');
 
+// Initialize public directories (accessible to all origins)
+const publicDir = './public';
+const publicImagesDir = path.join(publicDir, 'images');
+
 ensureDirectoryExists(uploadsDir);
 ensureDirectoryExists(imagesDir);
 ensureDirectoryExists(reportsDir);
+ensureDirectoryExists(publicDir);
+ensureDirectoryExists(publicImagesDir);
 
 // Storage configuration for images
 const imageStorage = multer.diskStorage({
@@ -31,9 +46,28 @@ const imageStorage = multer.diskStorage({
     const timestamp = Date.now();
     const extension = path.extname(file.originalname);
     const filename = `image_${timestamp}_${uniqueSuffix}${extension}`;
+    
+    // Store filename in request for later copying to public directory
+    req.uploadedFilename = filename;
+    
     cb(null, filename);
   }
 });
+
+// Function to copy image to public directory after upload
+export const copyToPublicDirectory = (req: Request) => {
+  if (req.uploadedFilename && req.file) {
+    const originalPath = req.file.path;
+    const publicPath = path.join(publicImagesDir, req.uploadedFilename);
+    
+    try {
+      fs.copyFileSync(originalPath, publicPath);
+      console.log(`Image copied to public directory: ${publicPath}`);
+    } catch (error) {
+      console.error('Error copying image to public directory:', error);
+    }
+  }
+};
 
 // File filter for images
 const imageFileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
@@ -97,6 +131,12 @@ export const handleUploadError = (error: any, req: Request, res: any, next: any)
 export const getFileUrl = (filename: string, type: 'image' | 'report' = 'image') => {
   const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
   return `${baseUrl}/uploads/${type}s/${filename}`;
+};
+
+// Helper function to get public image URL (accessible to all origins)
+export const getPublicImageUrl = (filename: string) => {
+  const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+  return `${baseUrl}/public/images/${filename}`;
 };
 
 // Helper function to delete file
