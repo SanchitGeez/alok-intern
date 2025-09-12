@@ -1,6 +1,21 @@
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:5000/api';
+// Get API URL from environment variable
+const getApiUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (!envUrl) {
+    console.warn('VITE_API_URL not found in environment variables, falling back to localhost');
+    return 'http://localhost:5000/api';
+  }
+  return envUrl;
+};
+
+export const API_BASE_URL = getApiUrl();
+
+// Helper function to get the base server URL (without /api)
+export const getServerUrl = () => {
+  return API_BASE_URL.replace('/api', '');
+};
 
 // Create axios instance
 const api = axios.create({
@@ -9,6 +24,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout
 });
 
 // Request interceptor to add auth token

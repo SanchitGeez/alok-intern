@@ -1,4 +1,4 @@
-import api from './api';
+import api, { getServerUrl } from './api';
 
 export interface PatientDetails {
   name: string;
@@ -109,7 +109,7 @@ class SubmissionService {
     if (imagePath.startsWith('http')) {
       return imagePath;
     }
-    return `http://localhost:5000/${imagePath}`;
+    return `${getServerUrl()}/${imagePath}`;
   }
 }
 

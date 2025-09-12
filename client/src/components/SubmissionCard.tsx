@@ -2,6 +2,7 @@ import { Calendar, Download, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Submission } from '@/services/submissionService';
+import { getServerUrl } from '@/services/api';
 
 interface SubmissionCardProps {
   submission: Submission;
@@ -49,7 +50,7 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
     if (!imageUrl && submission.originalImagePath) {
       const fileName = submission.originalImagePath.split('/').pop() || submission.originalImagePath;
       // Try public URL first (accessible to all origins)
-      imageUrl = `http://localhost:5000/public/images/${fileName}`;
+      imageUrl = `${getServerUrl()}/public/images/${fileName}`;
     }
     if (imageUrl) {
       window.open(imageUrl, '_blank');
@@ -60,7 +61,7 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
     let imageUrl = submission.annotatedImageUrl;
     if (!imageUrl && submission.annotatedImagePath) {
       const fileName = submission.annotatedImagePath.split('/').pop() || submission.annotatedImagePath;
-      imageUrl = `http://localhost:5000/uploads/images/${fileName}`;
+      imageUrl = `${getServerUrl()}/uploads/images/${fileName}`;
     }
     if (imageUrl) {
       window.open(imageUrl, '_blank');
@@ -71,7 +72,7 @@ export function SubmissionCard({ submission }: SubmissionCardProps) {
     let reportUrl = submission.reportUrl;
     if (!reportUrl && submission.reportPath) {
       const fileName = submission.reportPath.split('/').pop() || submission.reportPath;
-      reportUrl = `http://localhost:5000/uploads/reports/${fileName}`;
+      reportUrl = `${getServerUrl()}/uploads/reports/${fileName}`;
     }
     if (reportUrl) {
       window.open(reportUrl, '_blank');
