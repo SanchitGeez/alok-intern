@@ -70,7 +70,7 @@ if (config.NODE_ENV === 'development') {
 }
 
 // CORS middleware for static files
-app.use('/uploads', (req: Request, res: Response, next: NextFunction) => {
+app.use('/uploads', (req: Request, res: Response, next: NextFunction): void => {
   // Add CORS headers for static files
   res.header('Access-Control-Allow-Origin', config.CLIENT_URL);
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -83,14 +83,15 @@ app.use('/uploads', (req: Request, res: Response, next: NextFunction) => {
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+    res.sendStatus(200);
+    return;
   }
   
   next();
 });
 
 // CORS middleware for public images - allow all origins
-app.use('/public', (req: Request, res: Response, next: NextFunction) => {
+app.use('/public', (req: Request, res: Response, next: NextFunction): void => {
   // Allow all origins for public images
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
@@ -102,7 +103,8 @@ app.use('/public', (req: Request, res: Response, next: NextFunction) => {
   
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+    res.sendStatus(200);
+    return;
   }
   
   next();
@@ -131,7 +133,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Handle 404 routes
-app.use((req, res, next) => notFoundHandler(req, res, next));
+app.use((req, res) => notFoundHandler(req, res));
 
 // Global error handler
 app.use(globalErrorHandler);

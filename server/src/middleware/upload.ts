@@ -21,23 +21,28 @@ const ensureDirectoryExists = (dirPath: string) => {
 };
 
 // Initialize upload directories
-const uploadsDir = process.env.UPLOAD_DIR || './uploads';
+const uploadsDir = process.env.UPLOAD_DIR || (process.env.NODE_ENV === 'production' ? '/tmp/uploads' : './uploads');
 const imagesDir = path.join(uploadsDir, 'images');
 const reportsDir = path.join(uploadsDir, 'reports');
 
 // Initialize public directories (accessible to all origins)
-const publicDir = './public';
+const publicDir = process.env.NODE_ENV === 'production' ? '/tmp/public' : './public';
 const publicImagesDir = path.join(publicDir, 'images');
 
-ensureDirectoryExists(uploadsDir);
-ensureDirectoryExists(imagesDir);
-ensureDirectoryExists(reportsDir);
-ensureDirectoryExists(publicDir);
-ensureDirectoryExists(publicImagesDir);
+// Only create directories if they don't exist (important for serverless)
+if (process.env.NODE_ENV !== 'production' || !fs.existsSync(uploadsDir)) {
+  ensureDirectoryExists(uploadsDir);
+  ensureDirectoryExists(imagesDir);
+  ensureDirectoryExists(reportsDir);
+  ensureDirectoryExists(publicDir);
+  ensureDirectoryExists(publicImagesDir);
+}
 
 // Storage configuration for images
 const imageStorage = multer.diskStorage({
   destination: (req: Request, file: Express.Multer.File, cb) => {
+    // Ensure directory exists before writing (important for serverless)
+    ensureDirectoryExists(imagesDir);
     cb(null, imagesDir);
   },
   filename: (req: Request, file: Express.Multer.File, cb) => {
@@ -61,6 +66,8 @@ export const copyToPublicDirectory = (req: Request) => {
     const publicPath = path.join(publicImagesDir, req.uploadedFilename);
     
     try {
+      // Ensure public directory exists before copying
+      ensureDirectoryExists(publicImagesDir);
       fs.copyFileSync(originalPath, publicPath);
       console.log(`Image copied to public directory: ${publicPath}`);
     } catch (error) {

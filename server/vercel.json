@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "functions": {
+    "src/index.ts": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "builds": [
+    {
+      "src": "src/index.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["public/**", "uploads/**"]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/public/(.*)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/uploads/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "src/index.ts"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "regions": ["bom1"],
+  "outputDirectory": "dist"
+}

@@ -25,7 +25,7 @@ interface SubmissionState {
   setCurrentSubmission: (submission: Submission | null) => void;
 }
 
-export const useSubmissionStore = create<SubmissionState>((set, get) => ({
+export const useSubmissionStore = create<SubmissionState>((set) => ({
   submissions: [],
   currentSubmission: null,
   isLoading: false,
@@ -215,15 +215,16 @@ export const useSubmissionStore = create<SubmissionState>((set, get) => ({
       
       if (response.success && response.data) {
         // Update the current submission with the new report data
+        const submission = Array.isArray(response.data) ? response.data[0] : response.data;
         set(state => ({
           currentSubmission: state.currentSubmission ? {
             ...state.currentSubmission,
             status: 'reported',
-            reportUrl: response.data.reportUrl
+            reportUrl: submission?.reportUrl
           } : null,
           isLoading: false,
         }));
-        return { success: true, reportUrl: response.data.reportUrl };
+        return { success: true, reportUrl: submission?.reportUrl };
       } else {
         set({
           error: response.message || 'Failed to generate report',

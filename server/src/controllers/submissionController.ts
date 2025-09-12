@@ -23,7 +23,7 @@ const updateSubmissionSchema = z.object({
 });
 
 // Create a new submission
-export const createSubmission = async (req: Request, res: Response) => {
+export const createSubmission = async (req: Request, res: Response): Promise<any> => {
   try {
     // Validate request body
     const validatedData = createSubmissionSchema.parse(req.body);
@@ -91,7 +91,7 @@ export const createSubmission = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: 'Validation error',
-        errors: error.errors
+        errors: (error as any).errors
       });
     }
 
@@ -104,7 +104,7 @@ export const createSubmission = async (req: Request, res: Response) => {
 };
 
 // Get submissions for the current patient
-export const getPatientSubmissions = async (req: Request, res: Response) => {
+export const getPatientSubmissions = async (req: Request, res: Response): Promise<any> => {
   try {
     const userId = (req as any).user?.userId;
     if (!userId) {
@@ -154,7 +154,7 @@ export const getPatientSubmissions = async (req: Request, res: Response) => {
 };
 
 // Get all submissions (admin only)
-export const getAllSubmissions = async (req: Request, res: Response) => {
+export const getAllSubmissions = async (req: Request, res: Response): Promise<any> => {
   try {
     const userId = (req as any).user?.userId;
     if (!userId) {
@@ -228,7 +228,7 @@ export const getAllSubmissions = async (req: Request, res: Response) => {
 };
 
 // Get a specific submission
-export const getSubmission = async (req: Request, res: Response) => {
+export const getSubmission = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
     const userId = (req as any).user?.userId;
@@ -285,7 +285,7 @@ export const getSubmission = async (req: Request, res: Response) => {
 };
 
 // Update submission (admin only - for annotations)
-export const updateSubmission = async (req: Request, res: Response) => {
+export const updateSubmission = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
     const userId = (req as any).user?.userId;
@@ -345,7 +345,7 @@ export const updateSubmission = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: 'Validation error',
-        errors: error.errors
+        errors: (error as any).errors
       });
     }
 
@@ -358,7 +358,7 @@ export const updateSubmission = async (req: Request, res: Response) => {
 };
 
 // Delete submission (admin only)
-export const deleteSubmission = async (req: Request, res: Response) => {
+export const deleteSubmission = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
     const userId = (req as any).user?.userId;
@@ -404,7 +404,7 @@ export const deleteSubmission = async (req: Request, res: Response) => {
 };
 
 // Generate PDF report for submission (admin only)
-export const generateReport = async (req: Request, res: Response) => {
+export const generateReport = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params;
     const userId = (req as any).user?.userId;
@@ -447,7 +447,7 @@ export const generateReport = async (req: Request, res: Response) => {
 
     // Prepare report data
     const reportData = {
-      submissionId: submission._id.toString(),
+      submissionId: (submission._id as any).toString(),
       patientDetails: submission.patientDetails,
       originalImagePath: submission.originalImagePath,
       annotatedImagePath: submission.annotatedImagePath,

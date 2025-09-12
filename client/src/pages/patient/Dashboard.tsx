@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Upload, FileText, LogOut, Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useAuthStore } from '@/stores/authStore';
 import { useSubmissionStore } from '@/stores/submissionStore';
 import { SubmissionCard } from '@/components/SubmissionCard';

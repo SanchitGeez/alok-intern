@@ -57,7 +57,7 @@ export function ImageAnnotator({
       clearTimeout(loadTimeout);
       
       // Load the image with Fabric.js
-      fabric.Image.fromURL(imageUrl, (img) => {
+      fabric.Image.fromURL(imageUrl, {}, (img: fabric.FabricImage) => {
         console.log('ImageAnnotator: Fabric.js Image loaded:', img);
         if (!img || !canvas) {
           setHasError(true);
@@ -86,7 +86,7 @@ export function ImageAnnotator({
           });
 
           canvas.add(img);
-          canvas.sendToBack(img);
+          canvas.sendObjectToBack(img);
           setIsLoading(false);
 
           // Load initial annotations if provided
@@ -279,8 +279,10 @@ export function ImageAnnotator({
     if (!canvas) return;
 
     canvas.isDrawingMode = !canvas.isDrawingMode;
-    canvas.freeDrawingBrush.color = '#f59e0b';
-    canvas.freeDrawingBrush.width = 3;
+    if (canvas.freeDrawingBrush) {
+      canvas.freeDrawingBrush.color = '#f59e0b';
+      canvas.freeDrawingBrush.width = 3;
+    }
     setCurrentTool('freehand');
   };
 

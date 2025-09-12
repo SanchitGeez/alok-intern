@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   Save, 
-  Download, 
   Eye, 
   EyeOff,
   Square,
@@ -24,8 +23,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useSubmissionStore } from '@/stores/submissionStore';
-import { ImageAnnotator } from '@/components/ImageAnnotator';
-import type { Submission } from '@/services/submissionService';
 import testImage from '@/assets/image.png';
 
 export function SubmissionReview() {
@@ -117,10 +114,6 @@ export function SubmissionReview() {
     }
   };
 
-  const handleAnnotationChange = (newAnnotationData: any) => {
-    setAnnotationData(newAnnotationData);
-    setHasUnsavedChanges(true);
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {

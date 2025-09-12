@@ -15,7 +15,7 @@ const registerSchema = z.object({
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one lowercase letter, one uppercase letter, and one number'),
-  role: z.enum(['patient', 'admin'], { required_error: 'Please select a role' }),
+  role: z.enum(['patient', 'admin'], { message: 'Please select a role' }),
   patientId: z.string().optional(),
 }).refine((data) => {
   if (data.role === 'patient' && !data.patientId) {

@@ -25,7 +25,7 @@ export const globalErrorHandler = (
   if (error instanceof ZodError) {
     statusCode = 400;
     message = 'Validation failed';
-    validationErrors = error.errors.map(err => ({
+    validationErrors = (error as any).errors.map((err: any) => ({
       field: err.path.join('.'),
       message: err.message,
     }));

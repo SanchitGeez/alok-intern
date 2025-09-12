@@ -3,12 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Heart, 
   LogOut, 
-  Users, 
   FileText, 
   Eye, 
   Filter,
   Search,
-  Download,
   MoreVertical
 } from 'lucide-react';
 
@@ -25,7 +23,7 @@ export function AdminDashboard() {
   const { submissions, isLoading, error, fetchAllSubmissions } = useSubmissionStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage] = useState(1);
 
   useEffect(() => {
     fetchAllSubmissions({ page: currentPage, limit: 10 });

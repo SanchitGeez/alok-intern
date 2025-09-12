@@ -11,10 +11,10 @@ export class JWTService {
    */
   static generateToken(payload: IUserPayload): string {
     return jwt.sign(payload, this.JWT_SECRET, {
-      expiresIn: this.JWT_EXPIRES_IN,
+      expiresIn: this.JWT_EXPIRES_IN as string,
       issuer: 'oralvis-healthcare',
       audience: 'oralvis-users',
-    });
+    } as jwt.SignOptions);
   }
 
   /**
@@ -75,6 +75,6 @@ export class JWTService {
     const parts = authHeader.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer') return null;
     
-    return parts[1];
+    return parts[1] || null;
   }
 }

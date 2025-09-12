@@ -75,8 +75,8 @@ export const updateSubmissionStatusSchema = z.object({
 export const annotationDataSchema = z.object({
   annotations: z.array(z.object({
     type: z.enum(['rectangle', 'circle', 'arrow', 'freehand']),
-    data: z.record(z.any()),
-    timestamp: z.string().datetime(),
+    data: z.record(z.string(), z.any()),
+    timestamp: z.string(),
   })),
   canvasWidth: z.number().positive(),
   canvasHeight: z.number().positive(),
@@ -85,21 +85,21 @@ export const annotationDataSchema = z.object({
 // Query validation schemas
 export const paginationSchema = z.object({
   page: z.string()
+    .default('1')
     .transform(Number)
-    .refine(n => n > 0, 'Page must be greater than 0')
-    .default('1'),
+    .refine(n => n > 0, 'Page must be greater than 0'),
   
   limit: z.string()
+    .default('10')
     .transform(Number)
-    .refine(n => n > 0 && n <= 100, 'Limit must be between 1 and 100')
-    .default('10'),
+    .refine(n => n > 0 && n <= 100, 'Limit must be between 1 and 100'),
 });
 
 export const submissionFilterSchema = z.object({
   status: z.enum(['uploaded', 'annotated', 'reported']).optional(),
   patientId: z.string().optional(),
-  startDate: z.string().datetime().optional(),
-  endDate: z.string().datetime().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
 
 // File validation

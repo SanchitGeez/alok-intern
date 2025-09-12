@@ -31,7 +31,7 @@ export class AuthService {
 
     // Generate token
     const userPayload: IUserPayload = {
-      userId: user._id.toString(),
+      userId: (user._id as any).toString(),
       email: user.email,
       role: user.role,
       patientId: user.patientId,
@@ -41,7 +41,7 @@ export class AuthService {
 
     return {
       user: {
-        id: user._id.toString(),
+        id: (user._id as any).toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -69,7 +69,7 @@ export class AuthService {
 
     // Generate token
     const userPayload: IUserPayload = {
-      userId: user._id.toString(),
+      userId: (user._id as any).toString(),
       email: user.email,
       role: user.role,
       patientId: user.patientId,
@@ -79,7 +79,7 @@ export class AuthService {
 
     return {
       user: {
-        id: user._id.toString(),
+        id: (user._id as any).toString(),
         name: user.name,
         email: user.email,
         role: user.role,
@@ -171,7 +171,7 @@ export class AuthService {
 
       // Generate new access token
       const userPayload: IUserPayload = {
-        userId: user._id.toString(),
+        userId: (user._id as any).toString(),
         email: user.email,
         role: user.role,
         patientId: user.patientId,

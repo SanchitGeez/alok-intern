@@ -43,7 +43,7 @@ export const authenticate = async (
 
     // Add user info to request
     req.user = {
-      userId: user._id.toString(),
+      userId: (user._id as any).toString(),
       email: user.email,
       role: user.role,
       patientId: user.patientId,
@@ -137,7 +137,7 @@ export const optionalAuth = async (
       
       if (user) {
         req.user = {
-          userId: user._id.toString(),
+          userId: (user._id as any).toString(),
           email: user.email,
           role: user.role,
           patientId: user.patientId,

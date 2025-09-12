@@ -6,7 +6,6 @@ import { X, Upload, Image as ImageIcon, AlertCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import { useSubmissionStore } from '@/stores/submissionStore';
 import { useAuthStore } from '@/stores/authStore';
 

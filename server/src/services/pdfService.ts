@@ -129,8 +129,8 @@ export class PDFService {
 
     let y = doc.y + 10;
     info.forEach(([label, value]) => {
-      doc.font('Helvetica-Bold').text(label, 50, y);
-      doc.font('Helvetica').text(value, 150, y);
+      doc.font('Helvetica-Bold').text(label || '', 50, y);
+      doc.font('Helvetica').text(value || '', 150, y);
       y += 20;
     });
 

@@ -1,13 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { ISubmission } from '@/types';
 
-export interface ISubmissionDocument extends ISubmission, Document {}
+export interface ISubmissionDocument extends Omit<ISubmission, '_id'>, Document {}
 
 const submissionSchema = new Schema<ISubmissionDocument>(
   {
     patientId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
       required: [true, 'Patient ID is required'],
     },
     patientDetails: {
@@ -65,7 +64,7 @@ const submissionSchema = new Schema<ISubmissionDocument>(
   {
     timestamps: true,
     toJSON: {
-      transform: (doc, ret) => {
+      transform: (doc: any, ret: any) => {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
