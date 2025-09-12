@@ -9,24 +9,26 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const crypto_1 = __importDefault(require("crypto"));
 const ensureDirectoryExists = (dirPath) => {
-    if (!fs_1.default.existsSync(dirPath)) {
-        fs_1.default.mkdirSync(dirPath, { recursive: true });
+    try {
+        if (!fs_1.default.existsSync(dirPath)) {
+            fs_1.default.mkdirSync(dirPath, { recursive: true });
+        }
+    }
+    catch (error) {
+        console.warn(`Warning: Could not create directory ${dirPath}:`, error);
     }
 };
-const uploadsDir = process.env.UPLOAD_DIR || (process.env.NODE_ENV === 'production' ? '/tmp/uploads' : './uploads');
-const imagesDir = path_1.default.join(uploadsDir, 'images');
-const reportsDir = path_1.default.join(uploadsDir, 'reports');
-const publicDir = process.env.NODE_ENV === 'production' ? '/tmp/public' : './public';
-const publicImagesDir = path_1.default.join(publicDir, 'images');
-if (process.env.NODE_ENV !== 'production' || !fs_1.default.existsSync(uploadsDir)) {
-    ensureDirectoryExists(uploadsDir);
-    ensureDirectoryExists(imagesDir);
-    ensureDirectoryExists(reportsDir);
-    ensureDirectoryExists(publicDir);
-    ensureDirectoryExists(publicImagesDir);
-}
+const getUploadDirs = () => {
+    const uploadsDir = process.env.UPLOAD_DIR || (process.env.NODE_ENV === 'production' ? '/tmp/uploads' : './uploads');
+    const imagesDir = path_1.default.join(uploadsDir, 'images');
+    const reportsDir = path_1.default.join(uploadsDir, 'reports');
+    const publicDir = process.env.NODE_ENV === 'production' ? '/tmp/public' : './public';
+    const publicImagesDir = path_1.default.join(publicDir, 'images');
+    return { uploadsDir, imagesDir, reportsDir, publicDir, publicImagesDir };
+};
 const imageStorage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
+        const { imagesDir } = getUploadDirs();
         ensureDirectoryExists(imagesDir);
         cb(null, imagesDir);
     },
@@ -41,6 +43,7 @@ const imageStorage = multer_1.default.diskStorage({
 });
 const copyToPublicDirectory = (req) => {
     if (req.uploadedFilename && req.file) {
+        const { publicImagesDir } = getUploadDirs();
         const originalPath = req.file.path;
         const publicPath = path_1.default.join(publicImagesDir, req.uploadedFilename);
         try {

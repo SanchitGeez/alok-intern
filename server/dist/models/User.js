@@ -96,9 +96,7 @@ const userSchema = new mongoose_1.Schema({
         },
     },
 });
-userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
-userSchema.index({ patientId: 1 });
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password'))
         return next();

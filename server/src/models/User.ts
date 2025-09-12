@@ -69,9 +69,8 @@ const userSchema = new Schema<IUserDocument>(
 );
 
 // Index for better query performance
-userSchema.index({ email: 1 });
+// Note: email already has unique index, patientId has sparse index
 userSchema.index({ role: 1 });
-userSchema.index({ patientId: 1 });
 
 // Pre-save middleware to hash password
 userSchema.pre('save', async function (next) {

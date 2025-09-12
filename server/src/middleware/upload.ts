@@ -13,35 +13,35 @@ declare global {
   }
 }
 
-// Ensure upload directories exist
+// Ensure upload directories exist - with error handling for serverless
 const ensureDirectoryExists = (dirPath: string) => {
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
+  try {
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+  } catch (error) {
+    console.warn(`Warning: Could not create directory ${dirPath}:`, error);
+    // In serverless environments, this might be expected if the directory
+    // is in a read-only location. We'll handle this gracefully.
   }
 };
 
-// Initialize upload directories
-const uploadsDir = process.env.UPLOAD_DIR || (process.env.NODE_ENV === 'production' ? '/tmp/uploads' : './uploads');
-const imagesDir = path.join(uploadsDir, 'images');
-const reportsDir = path.join(uploadsDir, 'reports');
-
-// Initialize public directories (accessible to all origins)
-const publicDir = process.env.NODE_ENV === 'production' ? '/tmp/public' : './public';
-const publicImagesDir = path.join(publicDir, 'images');
-
-// Only create directories if they don't exist (important for serverless)
-if (process.env.NODE_ENV !== 'production' || !fs.existsSync(uploadsDir)) {
-  ensureDirectoryExists(uploadsDir);
-  ensureDirectoryExists(imagesDir);
-  ensureDirectoryExists(reportsDir);
-  ensureDirectoryExists(publicDir);
-  ensureDirectoryExists(publicImagesDir);
-}
+// Get upload directories - prefer /tmp in production for serverless compatibility
+const getUploadDirs = () => {
+  const uploadsDir = process.env.UPLOAD_DIR || (process.env.NODE_ENV === 'production' ? '/tmp/uploads' : './uploads');
+  const imagesDir = path.join(uploadsDir, 'images');
+  const reportsDir = path.join(uploadsDir, 'reports');
+  const publicDir = process.env.NODE_ENV === 'production' ? '/tmp/public' : './public';
+  const publicImagesDir = path.join(publicDir, 'images');
+  
+  return { uploadsDir, imagesDir, reportsDir, publicDir, publicImagesDir };
+};
 
 // Storage configuration for images
 const imageStorage = multer.diskStorage({
   destination: (req: Request, file: Express.Multer.File, cb) => {
-    // Ensure directory exists before writing (important for serverless)
+    // Get directories and ensure they exist (important for serverless)
+    const { imagesDir } = getUploadDirs();
     ensureDirectoryExists(imagesDir);
     cb(null, imagesDir);
   },
@@ -62,6 +62,7 @@ const imageStorage = multer.diskStorage({
 // Function to copy image to public directory after upload
 export const copyToPublicDirectory = (req: Request) => {
   if (req.uploadedFilename && req.file) {
+    const { publicImagesDir } = getUploadDirs();
     const originalPath = req.file.path;
     const publicPath = path.join(publicImagesDir, req.uploadedFilename);
     
