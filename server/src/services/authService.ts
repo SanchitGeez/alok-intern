@@ -1,7 +1,7 @@
-import { User, IUserDocument } from '@/models/User';
-import { JWTService } from '@/utils/jwt';
-import { RegisterInput, LoginInput } from '@/utils/validation';
-import { AuthResponse, IUserPayload } from '@/types';
+import { User, IUserDocument } from '../models/User';
+import { JWTService } from '../utils/jwt';
+import { RegisterInput, LoginInput } from '../utils/validation';
+import { AuthResponse, IUserPayload } from '../types';
 
 export class AuthService {
   /**

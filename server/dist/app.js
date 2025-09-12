@@ -7,11 +7,11 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const environment_1 = require("@/config/environment");
-const database_1 = require("@/config/database");
-const routes_1 = __importDefault(require("@/routes"));
-const errorHandler_1 = require("@/middleware/errorHandler");
-const security_1 = require("@/middleware/security");
+const environment_1 = require("./config/environment");
+const database_1 = require("./config/database");
+const routes_1 = __importDefault(require("./routes"));
+const errorHandler_1 = require("./middleware/errorHandler");
+const security_1 = require("./middleware/security");
 const app = (0, express_1.default)();
 (0, database_1.connectDatabase)();
 app.use((0, helmet_1.default)({

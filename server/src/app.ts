@@ -2,17 +2,17 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import { config } from '@/config/environment';
-import { connectDatabase } from '@/config/database';
-import routes from '@/routes';
+import { config } from './config/environment';
+import { connectDatabase } from './config/database';
+import routes from './routes';
 import { 
   globalErrorHandler, 
   notFoundHandler 
-} from '@/middleware/errorHandler';
+} from './middleware/errorHandler';
 import { 
   generalLimiter, 
   securityHeaders 
-} from '@/middleware/security';
+} from './middleware/security';
 
 // Create Express app
 const app: Application = express();

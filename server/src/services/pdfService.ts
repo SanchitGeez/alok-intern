@@ -1,7 +1,7 @@
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
-import { config } from '@/config/environment';
+import { config } from '../config/environment';
 
 export interface ReportData {
   submissionId: string;

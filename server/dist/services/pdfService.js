@@ -7,7 +7,7 @@ exports.PDFService = void 0;
 const pdfkit_1 = __importDefault(require("pdfkit"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const environment_1 = require("@/config/environment");
+const environment_1 = require("../config/environment");
 class PDFService {
     constructor() {
         this.reportsDir = environment_1.config.PDF_OUTPUT_DIR || './uploads/reports';

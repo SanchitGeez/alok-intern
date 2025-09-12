@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.securityHeaders = exports.passwordResetLimiter = exports.uploadLimiter = exports.authLimiter = exports.generalLimiter = void 0;
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
-const environment_1 = require("@/config/environment");
+const environment_1 = require("../config/environment");
 exports.generalLimiter = (0, express_rate_limit_1.default)({
     windowMs: environment_1.config.RATE_LIMIT_WINDOW_MS,
     max: environment_1.config.RATE_LIMIT_MAX_REQUESTS,

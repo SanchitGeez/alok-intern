@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import authRoutes from './authRoutes';
 import submissionRoutes from './submissions';
-import { ApiResponse } from '@/types';
+import { ApiResponse } from '../types';
 
 const router = Router();
 

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
-const authService_1 = require("@/services/authService");
-const validation_1 = require("@/utils/validation");
-const environment_1 = require("@/config/environment");
+const authService_1 = require("../services/authService");
+const validation_1 = require("../utils/validation");
+const environment_1 = require("../config/environment");
 class AuthController {
     static async register(req, res) {
         try {

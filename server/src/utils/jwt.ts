@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { config } from '@/config/environment';
-import { IUserPayload, IJwtPayload } from '@/types';
+import { config } from '../config/environment';
+import { IUserPayload, IJwtPayload } from '../types';
 
 export class JWTService {
   private static readonly JWT_SECRET = config.JWT_SECRET;

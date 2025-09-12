@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { AuthService } from '@/services/authService';
-import { registerSchema, loginSchema } from '@/utils/validation';
-import { AuthenticatedRequest, ApiResponse } from '@/types';
-import { config } from '@/config/environment';
+import { AuthService } from '../services/authService';
+import { registerSchema, loginSchema } from '../utils/validation';
+import { AuthenticatedRequest, ApiResponse } from '../types';
+import { config } from '../config/environment';
 
 export class AuthController {
   /**

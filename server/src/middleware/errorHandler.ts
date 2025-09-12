@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
-import { ApiResponse } from '@/types';
-import { config } from '@/config/environment';
+import { ApiResponse } from '../types';
+import { config } from '../config/environment';
 
 export interface AppError extends Error {
   statusCode?: number;

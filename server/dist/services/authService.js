@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
-const User_1 = require("@/models/User");
-const jwt_1 = require("@/utils/jwt");
+const User_1 = require("../models/User");
+const jwt_1 = require("../utils/jwt");
 class AuthService {
     static async register(userData) {
         const existingUser = await User_1.User.findOne({ email: userData.email });

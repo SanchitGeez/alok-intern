@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
-const environment_1 = require("@/config/environment");
+const environment_1 = require("./config/environment");
 const PORT = environment_1.config.PORT || 5000;
 const server = app_1.default.listen(PORT, () => {
     console.log(`

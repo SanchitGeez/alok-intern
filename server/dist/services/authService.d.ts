@@ -1,6 +1,6 @@
-import { IUserDocument } from '@/models/User';
-import { RegisterInput, LoginInput } from '@/utils/validation';
-import { AuthResponse } from '@/types';
+import { IUserDocument } from '../models/User';
+import { RegisterInput, LoginInput } from '../utils/validation';
+import { AuthResponse } from '../types';
 export declare class AuthService {
     static register(userData: RegisterInput): Promise<AuthResponse>;
     static login(credentials: LoginInput): Promise<AuthResponse>;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { JWTService } from '@/utils/jwt';
-import { AuthenticatedRequest, ApiResponse } from '@/types';
-import { User } from '@/models/User';
+import { JWTService } from '../utils/jwt';
+import { AuthenticatedRequest, ApiResponse } from '../types';
+import { User } from '../models/User';
 
 /**
  * Middleware to authenticate user using JWT token

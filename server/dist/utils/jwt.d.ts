@@ -1,4 +1,4 @@
-import { IUserPayload, IJwtPayload } from '@/types';
+import { IUserPayload, IJwtPayload } from '../types';
 export declare class JWTService {
     private static readonly JWT_SECRET;
     private static readonly JWT_EXPIRES_IN;

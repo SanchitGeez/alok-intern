@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.optionalAuth = exports.ensureOwnData = exports.authorize = exports.authenticate = void 0;
-const jwt_1 = require("@/utils/jwt");
-const User_1 = require("@/models/User");
+const jwt_1 = require("../utils/jwt");
+const User_1 = require("../models/User");
 const authenticate = async (req, res, next) => {
     try {
         let token = jwt_1.JWTService.extractTokenFromHeader(req.headers.authorization);

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createError = exports.asyncHandler = exports.notFoundHandler = exports.globalErrorHandler = void 0;
 const zod_1 = require("zod");
-const environment_1 = require("@/config/environment");
+const environment_1 = require("../config/environment");
 const globalErrorHandler = (error, req, res, next) => {
     let statusCode = error.statusCode || 500;
     let message = error.message || 'Internal server error';
