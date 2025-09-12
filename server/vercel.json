@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "src/index.ts": {
-      "runtime": "@vercel/node"
-    }
-  },
   "builds": [
     {
       "src": "src/index.ts",
@@ -31,6 +26,5 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "regions": ["bom1"],
-  "outputDirectory": "dist"
+  "regions": ["bom1"]
 }
